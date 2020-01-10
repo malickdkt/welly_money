@@ -8,20 +8,21 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
 class AppFixtures extends Fixture
 {
-   
-    private $encoder;
+    private $passwordEncoder;
+    
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
 
-     public function __construct(UserPasswordEncoderInterface $encoder)
-     {
-         $this->encoder = $encoder;
-     }
     public function load(ObjectManager $manager)
     {
+
+
         $role_admin_system = new Role();
-        $role_admin_system->setLibelle("ROLE_ADMIN_SYSTEM");
+        $role_admin_system->setLibelle("ROLE_SUPER_ADMIN");
         $manager->persist($role_admin_system);
 
         $role_admin = new Role();
@@ -38,20 +39,19 @@ class AppFixtures extends Fixture
         
         $roleAdmdinSystem = $this->getReference('role_admin_system');
         $roleAdmin = $this->getReference('role_admin');
-        $roleCaissier = $this->getReference('role_caissier');
+        $roleAaissier = $this->getReference('role_caissier');
 
-        $user = new User();
-        $user->setUsername('malickdkt');
-        $user->setRole($roleAdmdinSystem);
-        $user->setPassword('miko');
-        $user->setRoles(["ROLE_ADMIN_SYSTEM"]);
-        $user->setPrenom("malick");
-        $user->setNom("diakhate");
-        $user->setEmail("malickdkt@gmail.com");
-        $user->setIsActive(true);    
-        $manager->persist($user);
-        $manager->flush();
-  
+       $user = new User();
+       $user->setPrenom("malick");
+       $user->setNom("diakhate");
+       $user->setEmail("malickdkt@gmail.com");
+       $user->setUsername("malickdkt");
+       $user->setPassword($this->passwordEncoder->encodePassword($user, "miko"));
+       $user->setRoles(array("ROLE_SUPER_ADMIN"));
+       $user->setRole($roleAdmdinSystem);
+
+       $manager->persist($user);
        
+        $manager->flush();
     }
 }
