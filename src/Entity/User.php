@@ -5,51 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
-/**
- * @ApiResource(
- * collectionOperations={
- *          "get"={"security"="is_granted(['ROLE_ADMIN_ SYSTEM','ROLE_ADMIN'])",
- *            "normalisation_context"={"groups"={"get"}},
- *         },
- *          "createAdmin"={
- *          "method"="POST",
- *          "path"="/users/admin/new",
- *              "security"="is_granted('ROLE_ADMIN_SYSTEM')", 
- *               "security_message"="Acces refuse. Seul Admin System peut creer un Admin"
- *                 },
- *          "createCaissier"={
- *          "method"="POST",
- *          "path"="/users/caissier/new",
- *              "security"="is_granted(['ROLE_ADMIN_SYSTEM','ROLE_ADMIN'])", 
- *              "security_message"="Acces refuse. Seul Admin System ou Admin peut creer un  Caissier"
- *                 }
- *             },
- *     itemOperations={
- *          "get"={
- *              "security"="is_granted('ROLE_ADMIN_SYSTEM')",
- *             "normalisation_context"={"groups"={"get"}}
- *              },
- *          "bloquerAdmin"={
- *             "method"="PUT",
- *             "path"="/users/admin/{id}",
- *              "security"="is_granted('ROLE_ADMIN_SYSTEM')",
- *              "security_message"="Acces refuse. Seul Admin System peut bloquer un Admin"
- *                   },
- *          "bloquerCaissier"={
- *             "method"="PUT",
- *             "path"="/users/caissier/{id}",
- *              "security"="is_granted(['ROLE_ADMIN_SYSTEM','ROLE_ADMIN'])",
- *              "security_message"="Acces refuse. Seul Admin System ou un Admin peut bloquer un Caissier"
- *                   },
- *          "delete"={"security"="is_granted('ROLE_ADMIN')"}
- *     }
- *   
- *)
+
+
+ /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements AdvancedUserInterface
+class User implements UserInterface
 
 {
     /**
@@ -235,26 +198,6 @@ class User implements AdvancedUserInterface
         $this->Role = $Role;
 
         return $this;
-    }
-
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
-
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-
-    public function isCredentialsNonExpired()
-    {
-        return true;
-    }
-
-    public function isEnabled()
-    {
-        return $this->isActive;
     }
 }
 
