@@ -6,7 +6,13 @@ security:
     role_hierarchy:    
         ROLE_SUPER_ADMIN: [ROLE_ADMIN,ROLE_CAISSIER]
         ROLE_ADMIN: [ROLE_CAISSIER]
-            
+    
+    access_control:	
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, role: ROLE_USER }    
+
     providers:
         entity_provider:
             entity:
